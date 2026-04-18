@@ -320,7 +320,7 @@ ${resume}`;
             <div style={{ background: "#FFFBF0", border: "1px solid #F0DDB8", borderRadius: 12, padding: "20px 24px", marginTop: 24, textAlign: "center" }}>
               <p style={{ fontSize: 14, color: "#6A6050", margin: "0 0 4px", fontWeight: 500 }}>This would cost ₹3,000–₹10,000 at a career coach.</p>
               <p style={{ fontSize: 13, color: "#9A8C7A", margin: "0 0 12px" }}>If this helped you, consider buying me a coffee ☕</p>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "#C8913A", fontFamily: "'Libre Baskerville', serif", letterSpacing: "-0.5px" }}>UPI: yourname@upi</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: "#C8913A", fontFamily: "'Libre Baskerville', serif", letterSpacing: "-0.5px" }}>UPI: abhigyan.gupta5@oksbi</div>
               <p style={{ fontSize: 11, color: "#B0A898", marginTop: 6 }}>Google Pay · PhonePe · Paytm — any amount you feel is fair</p>
             </div>
 
