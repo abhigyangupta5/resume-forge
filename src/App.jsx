@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Sparkles, ChevronRight, ChevronLeft, Copy, Check } from "lucide-react";
+import { Sparkles, ChevronRight, ChevronLeft, Copy, Check, Zap } from "lucide-react";
 
 const SITUATIONS = [
   { value: "new-job", label: "New role in same field" },
@@ -9,10 +9,23 @@ const SITUATIONS = [
   { value: "fresher", label: "First job (fresher)" },
 ];
 
+const C = {
+  navy: "#0D1B2A",
+  navyMid: "#112236",
+  navyLight: "#1A3350",
+  navyBorder: "#1E3D5C",
+  coral: "#FF6B47",
+  coralDim: "#CC5037",
+  coralGlow: "rgba(255,107,71,0.12)",
+  white: "#F0F4F8",
+  whiteDim: "#B8C8D8",
+  whiteMuted: "#6A8099",
+};
+
 function inlineBold(text) {
   return text.split(/(\*\*[^*]+\*\*)/).map((p, i) =>
     p.startsWith("**") && p.endsWith("**")
-      ? <strong key={i} style={{ fontWeight: 600, color: "#1A1520" }}>{p.slice(2, -2)}</strong>
+      ? <strong key={i} style={{ fontWeight: 600, color: "#F0F4F8" }}>{p.slice(2, -2)}</strong>
       : p
   );
 }
@@ -22,14 +35,13 @@ function MarkdownView({ text }) {
   const lines = text.split("\n");
   const out = [];
   let buf = [];
-
   const flush = (k) => {
     if (!buf.length) return;
     out.push(
       <ul key={`ul-${k}`} style={{ margin: "4px 0 14px", paddingLeft: 0, listStyle: "none" }}>
         {buf.map((item, j) => (
-          <li key={j} style={{ display: "flex", gap: 8, marginBottom: 5, fontSize: 14, color: "#3A3650", lineHeight: 1.65 }}>
-            <span style={{ color: "#C8913A", flexShrink: 0, marginTop: 2, fontSize: 12 }}>▸</span>
+          <li key={j} style={{ display: "flex", gap: 8, marginBottom: 6, fontSize: 13.5, color: "#B8C8D8", lineHeight: 1.7 }}>
+            <span style={{ color: "#FF6B47", flexShrink: 0, marginTop: 3, fontSize: 10 }}>◆</span>
             <span>{inlineBold(item)}</span>
           </li>
         ))}
@@ -37,33 +49,32 @@ function MarkdownView({ text }) {
     );
     buf = [];
   };
-
   lines.forEach((line, i) => {
     if (line.startsWith("# ")) {
       flush(i);
-      out.push(<h1 key={i} style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 22, fontWeight: 700, color: "#0F0E1A", margin: "20px 0 2px", letterSpacing: "-0.3px" }}>{line.slice(2)}</h1>);
+      out.push(<h1 key={i} style={{ fontSize: 20, fontWeight: 700, color: "#F0F4F8", margin: "20px 0 2px", letterSpacing: "-0.3px" }}>{line.slice(2)}</h1>);
     } else if (line.startsWith("## ")) {
       flush(i);
       out.push(
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, margin: "24px 0 8px" }}>
-          <div style={{ width: 3, height: 16, background: "#C8913A", borderRadius: 2, flexShrink: 0 }} />
-          <h2 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 13, fontWeight: 700, color: "#C8913A", letterSpacing: "0.08em", textTransform: "uppercase", margin: 0 }}>{line.slice(3)}</h2>
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, margin: "22px 0 8px" }}>
+          <div style={{ width: 3, height: 14, background: "#FF6B47", borderRadius: 2, flexShrink: 0 }} />
+          <h2 style={{ fontSize: 11, fontWeight: 700, color: "#FF6B47", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{line.slice(3)}</h2>
         </div>
       );
     } else if (line.startsWith("### ")) {
       flush(i);
-      out.push(<h3 key={i} style={{ fontSize: 14, fontWeight: 600, color: "#1A1520", margin: "14px 0 4px" }}>{inlineBold(line.slice(4))}</h3>);
+      out.push(<h3 key={i} style={{ fontSize: 13.5, fontWeight: 600, color: "#F0F4F8", margin: "14px 0 4px" }}>{inlineBold(line.slice(4))}</h3>);
     } else if (line.startsWith("- ") || line.startsWith("* ")) {
       buf.push(line.slice(2));
     } else if (line.startsWith("---")) {
       flush(i);
-      out.push(<hr key={i} style={{ border: "none", borderTop: "1px solid #EAE8F0", margin: "20px 0" }} />);
+      out.push(<hr key={i} style={{ border: "none", borderTop: "1px solid #1E3D5C", margin: "20px 0" }} />);
     } else if (line.trim() === "") {
       flush(i);
-      out.push(<div key={i} style={{ height: 6 }} />);
+      out.push(<div key={i} style={{ height: 5 }} />);
     } else {
       flush(i);
-      out.push(<p key={i} style={{ fontSize: 13.5, color: "#3A3650", margin: "1px 0", lineHeight: 1.65 }}>{inlineBold(line)}</p>);
+      out.push(<p key={i} style={{ fontSize: 13.5, color: "#B8C8D8", margin: "1px 0", lineHeight: 1.7 }}>{inlineBold(line)}</p>);
     }
   });
   flush("end");
@@ -72,11 +83,11 @@ function MarkdownView({ text }) {
 
 const inp = {
   width: "100%", boxSizing: "border-box",
-  background: "#FAFAF8",
-  border: "1px solid #E0DDD8",
+  background: "#112236",
+  border: "1px solid #1E3D5C",
   borderRadius: 8,
-  color: "#1A1520",
-  fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+  color: "#F0F4F8",
+  fontFamily: "system-ui, sans-serif",
   fontSize: 13.5,
   padding: "9px 12px",
   outline: "none",
@@ -86,7 +97,7 @@ const lbl = {
   display: "block",
   fontSize: 11,
   fontWeight: 600,
-  color: "#8A8599",
+  color: "#6A8099",
   letterSpacing: "0.09em",
   textTransform: "uppercase",
   marginBottom: 5,
@@ -101,7 +112,7 @@ function Field({ label, children, col }) {
   );
 }
 
-export default function ResumeForge() {
+export default function Hupply() {
   const [phase, setPhase] = useState("intro");
   const [intake, setIntake] = useState({ name: "", role: "", industry: "", situation: "new-job", experience: "", achievements: "", skills: "", jd: "" });
   const [resume, setResume] = useState("");
@@ -110,14 +121,7 @@ export default function ResumeForge() {
   const [error, setError] = useState("");
   const [msgIdx, setMsgIdx] = useState(0);
 
-  const msgs = ["Diagnosing ATS issues...", "Rewriting impact bullets...", "Weaving in keywords...", "Crafting your summary...", "Building LinkedIn section...", "Writing your change log..."];
-
-  useEffect(() => {
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  }, []);
+  const msgs = ["Scanning for ATS issues...", "Rewriting weak bullets...", "Adding power keywords...", "Crafting your summary...", "Building LinkedIn section...", "Finalising change log..."];
 
   useEffect(() => {
     if (phase !== "gen") return;
@@ -131,23 +135,15 @@ export default function ResumeForge() {
 
   const generate = async () => {
     setPhase("gen"); setError("");
-
     const message = `INTAKE FORM:
 Name: ${intake.name || "Not provided"}
 Target Role: ${intake.role}
 Industry: ${intake.industry || "Not specified"}
 Situation: ${SITUATIONS.find(x => x.value === intake.situation)?.label}
 Experience: ${intake.experience}
-
-Key Achievements:
-${intake.achievements || "None provided"}
-
-Skills & Tools:
-${intake.skills}
-
-Target Job Description:
-${intake.jd || "Not provided"}
-
+Key Achievements: ${intake.achievements || "None provided"}
+Skills & Tools: ${intake.skills}
+Target Job Description: ${intake.jd || "Not provided"}
 ---
 CURRENT RESUME:
 ${resume}`;
@@ -158,10 +154,8 @@ ${resume}`;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
       });
-
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-
       setResult(data.result);
       setPhase("results");
     } catch (e) {
@@ -172,101 +166,96 @@ ${resume}`;
 
   const copy = () => { navigator.clipboard.writeText(result); setCopied(true); setTimeout(() => setCopied(false), 2500); };
   const reset = () => { setPhase("intro"); setResult(""); setResume(""); setIntake({ name: "", role: "", industry: "", situation: "new-job", experience: "", achievements: "", skills: "", jd: "" }); };
-
   const progIdx = { form: 0, resume: 1, results: 2 }[phase] ?? -1;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F6F4EF", fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: "#1A1520" }}>
+    <div style={{ minHeight: "100vh", background: "#0D1B2A", fontFamily: "system-ui, -apple-system, sans-serif", color: "#F0F4F8" }}>
       <style>{`
-        input:focus, textarea:focus, select:focus { border-color: #C8913A !important; box-shadow: 0 0 0 3px rgba(200,145,58,0.12); }
-        input::placeholder, textarea::placeholder { color: #B0ADBE; }
+        input, textarea, select { color-scheme: dark; }
+        input:focus, textarea:focus, select:focus { border-color: #FF6B47 !important; box-shadow: 0 0 0 3px rgba(255,107,71,0.12) !important; }
+        input::placeholder, textarea::placeholder { color: #6A8099 !important; }
+        select option { background: #112236; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fade { 0%,100%{opacity:0.45} 50%{opacity:1} }
-        @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
       `}</style>
 
-      <div style={{ background: "#FFFFFF", borderBottom: "1px solid #E8E5E0", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <Sparkles size={16} color="#C8913A" />
-          <span style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 17, fontWeight: 700, color: "#0F0E1A", letterSpacing: "-0.2px" }}>Résumé Forge</span>
-          <span style={{ fontSize: 11, color: "#B0ADBE", marginLeft: 2 }}>· AI-Powered</span>
+      <div style={{ background: "#112236", borderBottom: "1px solid #1E3D5C", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 26, height: 26, background: "#FF6B47", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Zap size={14} color="#fff" fill="#fff" />
+          </div>
+          <span style={{ fontSize: 17, fontWeight: 700, color: "#F0F4F8", letterSpacing: "-0.3px" }}>Hupply</span>
+          <span style={{ fontSize: 11, color: "#6A8099", marginLeft: 2 }}>· AI-Powered</span>
         </div>
         {phase === "results" && (
-          <button onClick={reset} style={{ fontSize: 12, color: "#8A8599", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>Start over</button>
+          <button onClick={reset} style={{ fontSize: 12, color: "#6A8099", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>Start over</button>
         )}
       </div>
 
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "32px 20px 60px" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "36px 20px 80px" }}>
 
         {progIdx >= 0 && (
-          <div style={{ display: "flex", gap: 6, marginBottom: 36 }}>
+          <div style={{ display: "flex", gap: 6, marginBottom: 40 }}>
             {["About you", "Your resume", "Results"].map((label, i) => (
               <div key={i} style={{ flex: 1 }}>
-                <div style={{ height: 2, borderRadius: 2, background: i <= progIdx ? "#C8913A" : "#DDD9D2", marginBottom: 5, transition: "background 0.3s" }} />
-                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: i === progIdx ? "#C8913A" : i < progIdx ? "#C8913A80" : "#B0ADBE" }}>{label}</div>
+                <div style={{ height: 2, borderRadius: 2, background: i <= progIdx ? "#FF6B47" : "#1E3D5C", marginBottom: 6, transition: "background 0.3s" }} />
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: i === progIdx ? "#FF6B47" : i < progIdx ? "#CC5037" : "#6A8099" }}>{label}</div>
               </div>
             ))}
           </div>
         )}
 
         {phase === "intro" && (
-          <div style={{ textAlign: "center", paddingTop: 40, animation: "fadeIn 0.4s ease" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "#FFF8EE", border: "1px solid #F0DDB8", borderRadius: 100, padding: "5px 14px", fontSize: 11, fontWeight: 600, color: "#C8913A", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 22 }}>
-              <Sparkles size={12} /> Powered by Gemini AI
+          <div style={{ textAlign: "center", paddingTop: 48, animation: "fadeUp 0.4s ease" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(255,107,71,0.12)", border: "1px solid rgba(255,107,71,0.25)", borderRadius: 100, padding: "5px 14px", fontSize: 11, fontWeight: 600, color: "#FF6B47", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 24 }}>
+              <Sparkles size={12} /> Free · No signup · AI-Powered
             </div>
-            <h1 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: "clamp(2rem, 6vw, 3rem)", fontWeight: 700, color: "#0F0E1A", letterSpacing: "-0.03em", lineHeight: 1.15, margin: "0 0 14px" }}>
-              Your Resume,<br /><em style={{ color: "#C8913A" }}>Forged to Win.</em>
-            </h1>
-            <p style={{ fontSize: 15, color: "#6A6878", maxWidth: 440, margin: "0 auto 30px", lineHeight: 1.7 }}>
-              Paste your resume and tell us your goals. Get an ATS-optimized rewrite, LinkedIn makeover, and personalized coaching — free.
+            <h1 style={{ fontSize: "clamp(2.2rem, 7vw, 3.4rem)", fontWeight: 800, color: "#F0F4F8", letterSpacing: "-0.04em", lineHeight: 1.1, margin: "0 0 8px" }}>Your resume,</h1>
+            <h1 style={{ fontSize: "clamp(2.2rem, 7vw, 3.4rem)", fontWeight: 800, color: "#FF6B47", letterSpacing: "-0.04em", lineHeight: 1.1, margin: "0 0 20px" }}>job-ready in seconds.</h1>
+            <p style={{ fontSize: 15, color: "#B8C8D8", maxWidth: 420, margin: "0 auto 32px", lineHeight: 1.75 }}>
+              Paste your resume. Get an ATS-optimized rewrite, LinkedIn makeover, and a full coaching report — completely free.
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 300, margin: "0 auto 32px", textAlign: "left" }}>
-              {["ATS-optimized bullet rewrites", "Keyword gap analysis", "LinkedIn headline + About section", "Change log with explanations", "Personalized coaching tips"].map((f, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13.5, color: "#4A4860" }}>
-                  <div style={{ width: 5, height: 5, borderRadius: 1, background: "#C8913A", flexShrink: 0 }} />{f}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, maxWidth: 360, margin: "0 auto 36px", textAlign: "left" }}>
+              {["ATS keyword optimization", "Impact bullet rewrites", "LinkedIn headline & About", "Full change log", "Personalized coaching tips", "Works for all experience levels"].map((f, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 13, color: "#B8C8D8" }}>
+                  <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#FF6B47", flexShrink: 0 }} />{f}
                 </div>
               ))}
             </div>
-            <button onClick={() => setPhase("form")} style={{ background: "#C8913A", color: "#FFF", border: "none", borderRadius: 9, padding: "12px 28px", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "inline-flex", alignItems: "center", gap: 6 }}>
-              Get Started <ChevronRight size={15} />
+            <button onClick={() => setPhase("form")} style={{ background: "#FF6B47", color: "#fff", border: "none", borderRadius: 10, padding: "13px 30px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "system-ui, sans-serif", display: "inline-flex", alignItems: "center", gap: 7 }}>
+              Optimize my resume <ChevronRight size={15} />
             </button>
+            <p style={{ fontSize: 12, color: "#6A8099", marginTop: 12 }}>No signup. No credit card. Just results.</p>
           </div>
         )}
 
         {phase === "form" && (
-          <div style={{ animation: "fadeIn 0.3s ease" }}>
-            <h2 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 22, fontWeight: 700, color: "#0F0E1A", margin: "0 0 4px" }}>Tell us about yourself</h2>
-            <p style={{ fontSize: 13, color: "#8A8599", marginBottom: 24 }}>More context = better results. Fields marked * are required.</p>
+          <div style={{ animation: "fadeUp 0.3s ease" }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: "#F0F4F8", margin: "0 0 4px", letterSpacing: "-0.3px" }}>Tell us about yourself</h2>
+            <p style={{ fontSize: 13, color: "#6A8099", marginBottom: 28 }}>More context = better output. Fields marked * are required.</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 18px" }}>
-              <Field label="Your Full Name" col="1">
-                <input value={intake.name} onChange={e => s("name", e.target.value)} style={inp} placeholder="Jane Smith" />
-              </Field>
-              <Field label="Target Job Title *" col="2">
-                <input value={intake.role} onChange={e => s("role", e.target.value)} style={inp} placeholder="Senior Product Manager" />
-              </Field>
-              <Field label="Industry" col="1">
-                <input value={intake.industry} onChange={e => s("industry", e.target.value)} style={inp} placeholder="FinTech, SaaS, Healthcare…" />
-              </Field>
+              <Field label="Full Name" col="1"><input value={intake.name} onChange={e => s("name", e.target.value)} style={inp} placeholder="Rahul Sharma" /></Field>
+              <Field label="Target Job Title *" col="2"><input value={intake.role} onChange={e => s("role", e.target.value)} style={inp} placeholder="Software Engineer" /></Field>
+              <Field label="Industry" col="1"><input value={intake.industry} onChange={e => s("industry", e.target.value)} style={inp} placeholder="IT, FinTech, Healthcare…" /></Field>
               <Field label="Career Situation" col="2">
                 <select value={intake.situation} onChange={e => s("situation", e.target.value)} style={{ ...inp, cursor: "pointer" }}>
                   {SITUATIONS.map(x => <option key={x.value} value={x.value}>{x.label}</option>)}
                 </select>
               </Field>
             </div>
-            <Field label="Years of Experience *">
-              <input value={intake.experience} onChange={e => s("experience", e.target.value)} style={inp} placeholder="e.g. 5 years, or 3 yrs in product + 2 in consulting" />
+            <Field label="Years of Experience *"><input value={intake.experience} onChange={e => s("experience", e.target.value)} style={inp} placeholder="2 years, or fresher, or 3 yrs in product + 2 in consulting" /></Field>
+            <Field label="Key Achievements (add numbers where possible)">
+              <textarea value={intake.achievements} onChange={e => s("achievements", e.target.value)} style={{ ...inp, minHeight: 80, resize: "vertical", lineHeight: 1.6 }} placeholder="Built system used by 200+ students · Won hackathon · Reduced load time by 40%…" />
             </Field>
-            <Field label="Key Achievements (with numbers where possible)">
-              <textarea value={intake.achievements} onChange={e => s("achievements", e.target.value)} style={{ ...inp, minHeight: 80, resize: "vertical", lineHeight: 1.6 }} placeholder="Led product launch driving $2M revenue · Reduced churn 18% · Managed 12-person team…" />
+            <Field label="Skills & Tools *">
+              <textarea value={intake.skills} onChange={e => s("skills", e.target.value)} style={{ ...inp, minHeight: 65, resize: "vertical", lineHeight: 1.6 }} placeholder="Python, React, SQL, Git, Figma, REST APIs…" />
             </Field>
-            <Field label="Key Skills & Tools *">
-              <textarea value={intake.skills} onChange={e => s("skills", e.target.value)} style={{ ...inp, minHeight: 65, resize: "vertical", lineHeight: 1.6 }} placeholder="Python, Figma, SQL, Agile, Stakeholder Management…" />
-            </Field>
-            <Field label="Target Job Description (paste keywords or full JD for best ATS matching)">
-              <textarea value={intake.jd} onChange={e => s("jd", e.target.value)} style={{ ...inp, minHeight: 100, resize: "vertical", lineHeight: 1.6 }} placeholder="Paste the job description here…" />
+            <Field label="Job Description (optional — paste for best ATS match)">
+              <textarea value={intake.jd} onChange={e => s("jd", e.target.value)} style={{ ...inp, minHeight: 90, resize: "vertical", lineHeight: 1.6 }} placeholder="Paste the job description here for keyword matching…" />
             </Field>
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
-              <button onClick={() => setPhase("resume")} disabled={!canStep1} style={{ background: canStep1 ? "#C8913A" : "#E8E5E0", color: canStep1 ? "#FFF" : "#B0ADBE", border: "none", borderRadius: 9, padding: "11px 24px", fontSize: 13.5, fontWeight: 600, cursor: canStep1 ? "pointer" : "not-allowed", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 5 }}>
+              <button onClick={() => setPhase("resume")} disabled={!canStep1} style={{ background: canStep1 ? "#FF6B47" : "#1E3D5C", color: canStep1 ? "#fff" : "#6A8099", border: "none", borderRadius: 9, padding: "11px 24px", fontSize: 13.5, fontWeight: 600, cursor: canStep1 ? "pointer" : "not-allowed", fontFamily: "system-ui, sans-serif", display: "flex", alignItems: "center", gap: 5, transition: "all 0.2s" }}>
                 Next: Add Resume <ChevronRight size={14} />
               </button>
             </div>
@@ -274,18 +263,16 @@ ${resume}`;
         )}
 
         {phase === "resume" && (
-          <div style={{ animation: "fadeIn 0.3s ease" }}>
-            <h2 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 22, fontWeight: 700, color: "#0F0E1A", margin: "0 0 4px" }}>Paste your current resume</h2>
-            <p style={{ fontSize: 13, color: "#8A8599", marginBottom: 20 }}>Plain text is fine — copy from Word, PDF, or any source.</p>
-            <textarea value={resume} onChange={e => setResume(e.target.value)} style={{ ...inp, minHeight: 320, resize: "vertical", lineHeight: 1.75, fontSize: 13 }} placeholder={"John Smith\njohn@email.com | New York, NY\n\nEXPERIENCE\nSoftware Engineer — Acme Corp (2021–2024)\n• Responsible for building frontend features...\n\nEDUCATION\nB.Tech Computer Science — IIT Delhi — 2021"} />
-            {error && (
-              <div style={{ background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#B91C1C", marginTop: 12 }}>{error}</div>
-            )}
+          <div style={{ animation: "fadeUp 0.3s ease" }}>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: "#F0F4F8", margin: "0 0 4px", letterSpacing: "-0.3px" }}>Paste your current resume</h2>
+            <p style={{ fontSize: 13, color: "#6A8099", marginBottom: 20 }}>Plain text is fine — copy from Word, PDF, or LinkedIn.</p>
+            <textarea value={resume} onChange={e => setResume(e.target.value)} style={{ ...inp, minHeight: 320, resize: "vertical", lineHeight: 1.75, fontSize: 13 }} placeholder={"Rahul Sharma\nrahul@email.com | Delhi, India\n\nEXPERIENCE\nWeb Dev Intern — TechStartup (2024)\n• Responsible for building pages...\n\nEDUCATION\nB.Tech CS — Chandigarh University — 2024"} />
+            {error && <div style={{ background: "rgba(255,77,77,0.1)", border: "1px solid rgba(255,77,77,0.3)", borderRadius: 8, padding: "10px 14px", fontSize: 13, color: "#FF8080", marginTop: 12 }}>{error}</div>}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
-              <button onClick={() => setPhase("form")} style={{ background: "none", border: "1px solid #E0DDD8", borderRadius: 8, padding: "9px 16px", fontSize: 13, color: "#6A6878", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
+              <button onClick={() => setPhase("form")} style={{ background: "none", border: "1px solid #1E3D5C", borderRadius: 8, padding: "9px 16px", fontSize: 13, color: "#B8C8D8", cursor: "pointer", fontFamily: "system-ui, sans-serif", display: "flex", alignItems: "center", gap: 4 }}>
                 <ChevronLeft size={13} /> Back
               </button>
-              <button onClick={generate} disabled={!canStep2} style={{ background: canStep2 ? "#C8913A" : "#E8E5E0", color: canStep2 ? "#FFF" : "#B0ADBE", border: "none", borderRadius: 9, padding: "11px 24px", fontSize: 13.5, fontWeight: 600, cursor: canStep2 ? "pointer" : "not-allowed", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 6 }}>
+              <button onClick={generate} disabled={!canStep2} style={{ background: canStep2 ? "#FF6B47" : "#1E3D5C", color: canStep2 ? "#fff" : "#6A8099", border: "none", borderRadius: 9, padding: "11px 24px", fontSize: 13.5, fontWeight: 600, cursor: canStep2 ? "pointer" : "not-allowed", fontFamily: "system-ui, sans-serif", display: "flex", alignItems: "center", gap: 6, transition: "all 0.2s" }}>
                 <Sparkles size={14} /> Optimize My Resume
               </button>
             </div>
@@ -293,39 +280,36 @@ ${resume}`;
         )}
 
         {phase === "gen" && (
-          <div style={{ textAlign: "center", paddingTop: 80 }}>
-            <div style={{ width: 52, height: 52, borderRadius: "50%", border: "2px solid #E8E5E0", borderTop: "2px solid #C8913A", margin: "0 auto 28px", animation: "spin 0.9s linear infinite" }} />
-            <h3 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 20, fontWeight: 400, fontStyle: "italic", color: "#0F0E1A", marginBottom: 10 }}>Forging your resume…</h3>
-            <p style={{ fontSize: 13.5, color: "#C8913A", animation: "fade 1.9s ease-in-out infinite" }}>{msgs[msgIdx]}</p>
-            <p style={{ fontSize: 12, color: "#B0ADBE", marginTop: 8 }}>This takes about 15–30 seconds</p>
+          <div style={{ textAlign: "center", paddingTop: 100 }}>
+            <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #1E3D5C", borderTop: "2px solid #FF6B47", margin: "0 auto 28px", animation: "spin 0.85s linear infinite" }} />
+            <h3 style={{ fontSize: 20, fontWeight: 700, color: "#F0F4F8", marginBottom: 10, letterSpacing: "-0.3px" }}>Optimizing your resume…</h3>
+            <p style={{ fontSize: 13.5, color: "#FF6B47", animation: "pulse 1.9s ease-in-out infinite" }}>{msgs[msgIdx]}</p>
+            <p style={{ fontSize: 12, color: "#6A8099", marginTop: 8 }}>Takes about 15–30 seconds</p>
           </div>
         )}
 
         {phase === "results" && (
-          <div style={{ animation: "fadeIn 0.4s ease" }}>
+          <div style={{ animation: "fadeUp 0.4s ease" }}>
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20, gap: 12 }}>
               <div>
-                <h2 style={{ fontFamily: "'Libre Baskerville', Georgia, serif", fontSize: 22, fontWeight: 700, color: "#0F0E1A", margin: "0 0 3px" }}>Your Optimized Resume</h2>
-                <p style={{ fontSize: 12.5, color: "#8A8599", margin: 0 }}>Review, copy, and paste into your preferred doc editor.</p>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: "#F0F4F8", margin: "0 0 3px", letterSpacing: "-0.3px" }}>Your Optimized Resume</h2>
+                <p style={{ fontSize: 12.5, color: "#6A8099", margin: 0 }}>Review, copy, and paste into Word or Notion.</p>
               </div>
-              <button onClick={copy} style={{ flexShrink: 0, background: copied ? "#F0FDF4" : "#FFFFFF", border: `1px solid ${copied ? "#86EFAC" : "#E0DDD8"}`, borderRadius: 8, padding: "8px 14px", fontSize: 12.5, color: copied ? "#16A34A" : "#6A6878", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif", display: "flex", alignItems: "center", gap: 5 }}>
+              <button onClick={copy} style={{ flexShrink: 0, background: copied ? "rgba(255,107,71,0.15)" : "#112236", border: `1px solid ${copied ? "#FF6B47" : "#1E3D5C"}`, borderRadius: 8, padding: "8px 14px", fontSize: 12.5, color: copied ? "#FF6B47" : "#B8C8D8", cursor: "pointer", fontFamily: "system-ui, sans-serif", display: "flex", alignItems: "center", gap: 5, transition: "all 0.2s" }}>
                 {copied ? <><Check size={13} /> Copied!</> : <><Copy size={13} /> Copy all</>}
               </button>
             </div>
-            <div style={{ background: "#FFFFFF", border: "1px solid #E8E5E0", borderRadius: 12, padding: "28px 28px 36px" }}>
+            <div style={{ background: "#112236", border: "1px solid #1E3D5C", borderRadius: 12, padding: "28px 28px 36px" }}>
               <MarkdownView text={result} />
             </div>
-
-            {/* UPI Tip Jar */}
-            <div style={{ background: "#FFFBF0", border: "1px solid #F0DDB8", borderRadius: 12, padding: "20px 24px", marginTop: 24, textAlign: "center" }}>
-              <p style={{ fontSize: 14, color: "#6A6050", margin: "0 0 4px", fontWeight: 500 }}>This would cost ₹3,000–₹10,000 at a career coach.</p>
-              <p style={{ fontSize: 13, color: "#9A8C7A", margin: "0 0 12px" }}>If this helped you, consider buying me a coffee ☕</p>
-              <div style={{ fontSize: 22, fontWeight: 700, color: "#C8913A", fontFamily: "'Libre Baskerville', serif", letterSpacing: "-0.5px" }}>UPI: abhigyan.gupta5@oksbi</div>
-              <p style={{ fontSize: 11, color: "#B0A898", marginTop: 6 }}>Google Pay · PhonePe · Paytm — any amount you feel is fair</p>
+            <div style={{ background: "#112236", border: "1px solid #1E3D5C", borderRadius: 12, padding: "20px 24px", marginTop: 20, textAlign: "center" }}>
+              <p style={{ fontSize: 14, color: "#B8C8D8", margin: "0 0 4px", fontWeight: 500 }}>Career coaches charge ₹3,000–₹10,000 for this.</p>
+              <p style={{ fontSize: 13, color: "#6A8099", margin: "0 0 12px" }}>If Hupply helped you, buy me a coffee ☕</p>
+              <div style={{ fontSize: 20, fontWeight: 700, color: "#FF6B47", letterSpacing: "-0.5px" }}>UPI: yourname@upi</div>
+              <p style={{ fontSize: 11, color: "#6A8099", marginTop: 6 }}>Google Pay · PhonePe · Paytm — any amount you feel is fair</p>
             </div>
-
             <div style={{ display: "flex", justifyContent: "center", marginTop: 24 }}>
-              <button onClick={reset} style={{ background: "none", border: "1px solid #E0DDD8", borderRadius: 9, padding: "10px 22px", fontSize: 13, color: "#6A6878", cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <button onClick={reset} style={{ background: "none", border: "1px solid #1E3D5C", borderRadius: 9, padding: "10px 22px", fontSize: 13, color: "#B8C8D8", cursor: "pointer", fontFamily: "system-ui, sans-serif" }}>
                 Optimize another resume
               </button>
             </div>
